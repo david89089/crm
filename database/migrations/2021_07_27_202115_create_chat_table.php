@@ -15,16 +15,16 @@ class CreateChatTable extends Migration
     {
         Schema::create('chat', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('companion_id');
+            $table->unsignedBigInteger('owner_user_id');
+            $table->unsignedBigInteger('invited_user_id');
             $table->timestamps();
 
-            $table->foreign('user_id')
+            $table->foreign('owner_user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
 
-            $table->foreign('companion_id')
+            $table->foreign('invited_user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');

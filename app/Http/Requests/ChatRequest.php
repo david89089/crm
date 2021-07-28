@@ -28,7 +28,7 @@ class ChatRequest extends FormRequest
     public function rules()
     {
         return [
-            'companion_id' => ['required', 'integer', 'exists:users,id'],
+            'invited_user_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 }

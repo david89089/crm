@@ -42,13 +42,13 @@
                                             @if(\App\Service\ChatService::checkChat(auth()->id(), $user->id))
                                                 <form action="{{route('chat.check')}}" method="post">
                                                     @csrf
-                                                    <input type="hidden" name="companion_id" value="{{ $user->id }}">
+                                                    <input type="hidden" name="invited_user_id" value="{{ $user->id }}">
                                                     <button type="submit" class="btn btn-primary">Зайти в чат</button>
                                                 </form>
                                             @else
                                                 <form action="{{route('chat.store')}}" method="post">
                                                     @csrf
-                                                    <input type="hidden" name="companion_id" value="{{ $user->id }}">
+                                                    <input type="hidden" name="invited_user_id" value="{{ $user->id }}">
                                                     <button type="submit" class="btn btn-primary">Создать чат</button>
                                                 </form>
                                             @endif

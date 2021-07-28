@@ -26,7 +26,7 @@
                     <form action="{{route('chat.message.store')}}" method="post">
                         @csrf
                         <table class="table">
-                            <div style="height: 60vh;width: 100%;overflow-y: auto">
+                            <div id="block" style="height: 60vh;width: 100%;overflow-y: auto">
                                 @auth
                                     @foreach($chat->messages as $message)
                                         @if($message->user->id == auth()->id())
@@ -68,3 +68,8 @@
     </div>
 </div>
 @endsection
+
+<script type="text/javascript">
+    let objDiv = document.getElementById("block");
+    objDiv.scrollTop = objDiv.scrollHeight;
+</script>

@@ -26,6 +26,6 @@ class ChatPolicy
 
     public function index(User $user, Chat $chat)
     {
-        return $user->id === $chat->user_id || $user->id === $chat->companion_id;
+        return $user->id === $chat->invited_user_id || $user->id === $chat->owner_user_id;
     }
 }

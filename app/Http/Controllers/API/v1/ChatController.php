@@ -21,7 +21,7 @@ class ChatController extends Controller
 
     public function check(Request $request)
     {
-        $chat = $this->chatService->checkChat(auth()->id(), $request->get('companion_id'));
+        $chat = $this->chatService->checkChat(auth()->id(), $request->get('invited_user_id'));
 
         if(!$chat) return back()->withErrors('Такого чата нет :(');
 
@@ -30,12 +30,12 @@ class ChatController extends Controller
 
     public function store(ChatRequest $request)
     {
-        $companion_id = $request->get('companion_id');
+        $invitedUserId = $request->get('invited_user_id');
 
-        $chat = $this->chatService->checkChat(auth()->id(), $companion_id);
+        $chat = $this->chatService->checkChat(auth()->id(), $invitedUserId);
 
         if(!$chat) {
-            $chat = $this->chatService->store($companion_id);
+            $chat = $this->chatService->store($invitedUserId);
         }
 
         return redirect()->route('chat.index', ['id' => $chat->id]);

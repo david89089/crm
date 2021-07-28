@@ -15,16 +15,21 @@ class Chat extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['chat_id', 'user_id', 'companion_id'];
+    protected $fillable = ['chat_id', 'owner_user_id', 'invited_user_id'];
 
     protected $table = 'chat';
 
     /**
      * @return belongsTo
      */
-    public function user(): belongsTo
+    public function invited(): belongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'invited_user_id', 'id');
+    }
+
+    public function owner(): belongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_user_id', 'id');
     }
 
     public function messages(): HasMany
