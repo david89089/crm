@@ -26,41 +26,67 @@
 
                     <table class="table">
                         <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Зайти в чат</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Имя</th>
+                                @if(Auth::user()->chat)
+                                    <th scope="col">Пригласить</th>
+                                @endif
+                                <th scope="col">Беседы</th>
+                            </tr>
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
                                 <tr>
                                     <th scope="row">{{$user->id}}</th>
                                     <td>{{$user->name}}</td>
-                                    @if($user->id != auth()->id())
-                                        <td>
-                                            @if(\App\Service\ChatService::checkChat(auth()->id(), $user->id))
-                                                <form action="{{route('chat.check')}}" method="post">
-                                                    @csrf
-                                                    <input type="hidden" name="invited_user_id" value="{{ $user->id }}">
-                                                    <button type="submit" class="btn btn-primary">Зайти в чат</button>
-                                                </form>
+                                    @if(Auth::user()->chat)
+                                        @if($user->id != auth()->id())
+                                            @if(\App\Repository\ChatRepository::isChatUser(Auth::user()->chat, $user->id))
+                                                <td>
+                                                    <form method="POST" action="{{route('chat.delete.user', ['chat' => Auth::user()->chat->id])}}">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                        <button type="submit" class="btn btn-warning">Выгнать</button>
+                                                    </form>
+                                                </td>
                                             @else
-                                                <form action="{{route('chat.store')}}" method="post">
-                                                    @csrf
-                                                    <input type="hidden" name="invited_user_id" value="{{ $user->id }}">
-                                                    <button type="submit" class="btn btn-primary">Создать чат</button>
-                                                </form>
+                                                <td>
+                                                    <form method="POST" action="{{route('chat.add.user', ['chat' => Auth::user()->chat->id])}}">
+                                                        @csrf
+                                                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                        <button type="submit" class="btn btn-warning">Пригласить</button>
+                                                    </form>
+                                                </td>
                                             @endif
-                                        </td>
+                                        @else
+                                            <td>Нельзя приглашать себя</td>
+                                        @endif
+                                    @endif
+                                    @if($user->chat)
+                                        @if(\App\Repository\ChatRepository::isChatUser($user->chat, auth()->id()))
+                                            <td>
+                                                <form method="GET" action="{{route('chat.index', ['chat' => $user->chat->id])}}">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-primary">Зайти</button>
+                                                </form>
+                                            </td>
+                                        @else
+                                            <td></td>
+                                        @endif
+                                    @else
+                                        <td></td>
                                     @endif
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    {{$users->links("pagination::bootstrap-4")}}
                 </div>
             </div>
         </div>
+        <notifications v-bind:user_id="{{Auth::user()->id}}"></notifications>
     </div>
 </div>
 @endsection

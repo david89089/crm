@@ -2,14 +2,26 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * Class User
+ * @package App\Models
+ */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use HasRoles;
+    use Notifiable;
+    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +32,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'birth_date',
+        'phone',
+        'photo'
     ];
 
     /**
@@ -42,10 +57,31 @@ class User extends Authenticatable
     ];
 
     /**
+     * @return HasOne
+     */
+    public function chat(): HasOne
+    {
+        return $this->hasOne(Chat::class, 'user_id');
+    }
+
+    /**
      * @return HasMany
      */
-    public function chat(): HasMany
+    public function logs(): HasMany
     {
-        return $this->hasMany(Chat::class, 'owner_user_id', 'id');
+        return $this->hasMany(Logs::class, 'user_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function chats(): BelongsToMany
+    {
+        return $this->belongsToMany(Chat::class, 'chat_users');
+    }
+
+    public function setBirthDateAttribute($value)
+    {
+        $this->attributes['birth_date'] =  Carbon::parse($value);
     }
 }
