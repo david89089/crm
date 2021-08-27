@@ -14,6 +14,8 @@
         "bootstrap": "^4.6.0",
         "jquery": "^3.6",
         "laravel-mix": "^6.0.6",
+        "less": "^4.1.1",
+        "less-loader": "^10.0.1",
         "lodash": "^4.17.19",
         "popper.js": "^1.16.1",
         "postcss": "^8.1.14",
@@ -23,5 +25,11 @@
         "vue": "^2.6.12",
         "vue-loader": "^15.9.7",
         "vue-template-compiler": "^2.6.12"
+    },
+    "dependencies": {
+        "laravel-echo": "^1.11.1",
+        "laravel-echo-server": "^1.6.2",
+        "moment": "^2.29.1",
+        "socket.io-client": "^2.4.0"
     }
 }

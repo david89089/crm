@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NotificationEvent;
 use App\Models\Chat;
+use Illuminate\Http\Request;
 
 /**
  * Class ChatController
@@ -10,13 +12,21 @@ use App\Models\Chat;
  */
 class ChatController extends Controller
 {
-    public function index(int $id)
+    public function index(Request $request, Chat $chat)
     {
-        $chat = Chat::find($id);
-        if(!$chat) return back()->withErrors('Ошибка, чата не существует :(');
+        $data = $chat->with(['owner', 'messages' => function($q){
+            $q->with('user');
+        }])->where('id', $chat->id)->first();
 
-        $this->authorize('index', $chat);
+        if(!$data) return back()->withErrors('Ошибка, чата не существует :(');
 
-        return view('chat', ['chat' => $chat]);
+        foreach ($data->messages as $message) {
+            if($message->user_id != auth()->id()) {
+                $message->read = true;
+                $message->save();
+            }
+        }
+
+        return view('chat', ['chat' => $data]);
     }
 }

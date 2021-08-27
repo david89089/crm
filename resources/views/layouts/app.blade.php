@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'CRM') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -63,10 +63,17 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
+                                    <a class="dropdown-item" href="{{ route('setting.index') }}">
+                                        {{ 'Settings'}}
+                                    </a>
+                                    @if(Auth::user()->hasRole('manager'))
+                                        <a class="dropdown-item" href="{{ route('admin.users.index') }}">
+                                            {{ 'Admin'}}
+                                        </a>
+                                    @endif
                                 </div>
                             </li>
                         @endguest

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UsersEnum;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,7 @@ class HomeController extends Controller
     public function index()
     {
         return view('home', [
-            'users' => User::all(),
+            'users' => User::where('status', UsersEnum::STATUS_ACCESS)->paginate(10),
         ]);
     }
 }

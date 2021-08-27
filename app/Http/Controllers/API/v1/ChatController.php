@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\API\v1;
 
+use App\Enums\UsersEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ChatRequest;
-use App\Service\ChatService;
+use App\Models\Chat;
+use App\Models\User;
+use App\Repository\ChatRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Class ChatController
@@ -13,31 +17,52 @@ use Illuminate\Http\Request;
  */
 class ChatController extends Controller
 {
-    public ChatService $chatService;
-    public function __construct(ChatService $chatService)
+    public ChatRepository $chatRepository;
+    public function __construct(ChatRepository $chatRepository)
     {
-        $this->chatService = $chatService;
+        $this->chatRepository = $chatRepository;
     }
 
-    public function check(Request $request)
+    public function store(Request $request)
     {
-        $chat = $this->chatService->checkChat(auth()->id(), $request->get('invited_user_id'));
+        $chat = $this->chatRepository->store($request->get('id'));
 
-        if(!$chat) return back()->withErrors('Такого чата нет :(');
-
-        return redirect()->route('chat.index', ['id' => $chat->id]);
+        return redirect()->route('chat.index', ['chat' => $chat->id]);
     }
 
-    public function store(ChatRequest $request)
+    public function destroy(Request $request)
     {
-        $invitedUserId = $request->get('invited_user_id');
+        $this->chatRepository->destroy($request->get('id'));
 
-        $chat = $this->chatService->checkChat(auth()->id(), $invitedUserId);
+        return back();
+    }
 
-        if(!$chat) {
-            $chat = $this->chatService->store($invitedUserId);
+    public function addUser(Request $request, Chat $chat)
+    {
+        $user = User::find($request->input('user_id'));
+
+        $isChatUser = $this->chatRepository->isChatUser($chat, $user->id);
+
+        if($isChatUser) {
+            return back()->withErrors('Error add user');
         }
 
-        return redirect()->route('chat.index', ['id' => $chat->id]);
+        $this->chatRepository->addUser($chat, $user);
+
+        return back();
+    }
+
+    public function deleteUser(Request $request, Chat $chat)
+    {
+        $user = User::find($request->input('user_id'));
+
+        $isChatUser = $this->chatRepository->isChatUser($chat, $user->id);
+
+        if($isChatUser) {
+            $this->chatRepository->deleteUser($chat, $user);
+            return back();
+        }
+
+        return back()->withErrors('Error delete user');
     }
 }
