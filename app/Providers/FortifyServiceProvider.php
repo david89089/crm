@@ -24,7 +24,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->instance(abstract: LogoutResponse::class, instance: new class extends LogoutResponse {
+        $this->app->instance(LogoutResponse::class, new class extends LogoutResponse {
             public function toResponse($request)
             {
                 return redirect('/');
