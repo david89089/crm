@@ -15,7 +15,7 @@ use Illuminate\Contracts\View\View;
  */
 class UsersController extends Controller
 {
-    public function index(): Factory|View|Application
+    public function index()
     {
         $users = User::query()
             ->orderByDesc('created_at')
