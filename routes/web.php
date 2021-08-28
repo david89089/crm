@@ -34,9 +34,14 @@ Route::middleware('auth')->group(function () {
         Route::middleware('chat')->group(function () {
             Route::get('/{chat}', [ChatController::class, 'index'])->name('index');
         });
-        Route::delete('/', [ApiChatController::class, 'destroy'])->name('destroy');
 
-        Route::post('/', [ApiChatController::class, 'store'])->name('store');
+        Route::delete('/', [ApiChatController::class, 'destroy'])
+            ->name('destroy')
+            ->middleware('destroy.chat');
+
+        Route::post('/', [ApiChatController::class, 'store'])
+            ->name('store')
+            ->middleware('create.chat');
 
         Route::post('/message', [ApiChatMessageController::class, 'store'])
             ->name('message.store')

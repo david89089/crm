@@ -5,6 +5,8 @@ namespace App\Http;
 use App\Http\Middleware\AccessChat;
 use App\Http\Middleware\ChatMessage;
 use App\Http\Middleware\ControlChat;
+use App\Http\Middleware\CreateChat;
+use App\Http\Middleware\DestroyChat;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -69,5 +71,7 @@ class Kernel extends HttpKernel
         'chat' => AccessChat::class,
         'control.chat' => ControlChat::class,
         'chat.message' => ChatMessage::class,
+        'create.chat' => CreateChat::class,
+        'destroy.chat' => DestroyChat::class,
     ];
 }
