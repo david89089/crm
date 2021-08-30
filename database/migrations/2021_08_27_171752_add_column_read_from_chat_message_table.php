@@ -14,7 +14,7 @@ class AddColumnReadFromChatMessageTable extends Migration
     public function up()
     {
         Schema::table('chat_message', function (Blueprint $table) {
-            $table->boolean('read');
+            $table->boolean('read')->default(0);
         });
     }
 

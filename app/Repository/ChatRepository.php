@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Repository;
+use App\Events\PrivateChatEvent;
 use App\Models\Chat;
+use App\Models\ChatMessage;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 
@@ -63,5 +65,15 @@ class ChatRepository
         $chat->users()->detach($user->id);
 
         return Session::flash('status', __('Success delete user '. $user->name));
+    }
+
+    public function storeMessage(int $chat_id, string $message)
+    {
+        $data = ChatMessage::create([
+            'chat_id' => $chat_id,
+            'user_id' => auth()->id(),
+            'message' => $message,
+        ])->with('user')->latest()->first();
+        return $data;
     }
 }

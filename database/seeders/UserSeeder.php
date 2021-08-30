@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use anlutro\cURL\cURL;
+use App\Enums\UsersEnum;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -23,6 +24,7 @@ class UserSeeder extends Seeder
             'email' => 'manager@admin.ru',
             'email_verified_at' => now(),
             'password' => Hash::make('12345678'),
+            'status' => UsersEnum::STATUS_ACCESS,
             'birth_date' => now(),
             'phone' => '987654321'
         ]);

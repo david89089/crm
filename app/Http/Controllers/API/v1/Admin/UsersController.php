@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\API\v1\Admin;
 
 use App\Enums\UsersEnum;
-use App\Events\LogsEvent;
 use App\Http\Controllers\Controller;
-use App\Models\Logs;
+use App\Http\Requests\Admin\UpdateStatus;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Repository\LogsRepository;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -16,22 +15,22 @@ use Illuminate\Support\Facades\Session;
  */
 class UsersController extends Controller
 {
-    public function updateStatus(Request $request, int $status)
+    public LogsRepository $logsRepository;
+
+    public function __construct(LogsRepository $logsRepository)
+    {
+        $this->logsRepository = $logsRepository;
+    }
+
+    public function updateStatus(UpdateStatus $request, int $status)
     {
         $user = User::find($request->input('user_id'));
         $user->status = $status;
         $user->save();
 
-        $logs = $user->logs()->create([
-            'type' => $status,
-            'owner_id' => auth()->id(),
-            'log' => $user->name.' status updated '.UsersEnum::getNameByStatus($status),
-        ])->with('user', 'owner')->latest()->first();
-
-        LogsEvent::dispatch($logs);
+        $this->logsRepository->createLogStatus($user, $status);
 
         Session::flash('status', __("Status updated ".UsersEnum::getNameByStatus($status)));
-
-        return back()->with('Update status success');
+        return back();
     }
 }

@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\UsersEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Application;
-use Illuminate\Contracts\View\View;
 
 /**
  * Class UsersController

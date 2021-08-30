@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\API\v1;
 
-use App\Events\NotificationEvent;
 use App\Events\PrivateChatEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChatMessageRequest;
-use App\Models\Chat;
-use App\Models\ChatMessage;
-use Illuminate\Http\Request;
+use App\Repository\ChatRepository;
+use App\Service\NotificationService;
 
 /**
  * Class ChatMessageController
@@ -16,22 +14,23 @@ use Illuminate\Http\Request;
  */
 class ChatMessageController extends Controller
 {
+    public ChatRepository $chatRepository;
+    public NotificationService $notificationService;
+
+    public function __construct(ChatRepository $chatRepository,
+                                NotificationService $notificationService)
+    {
+        $this->chatRepository = $chatRepository;
+        $this->notificationService = $notificationService;
+    }
+
     public function store(ChatMessageRequest $request)
     {
-        $data = ChatMessage::create([
-            'chat_id' => $request->get('chat_id'),
-            'user_id' => auth()->id(),
-            'message' => $request->get('message'),
-        ])->with('user')->latest()->first();
+        $data = $this->chatRepository->storeMessage($request->input('chat_id'), $request->input('message'));
 
         PrivateChatEvent::dispatch($data);
 
-        $chat = Chat::find($data->chat_id);
-        foreach ($chat->users as $user) {
-            if($user->id != auth()->id()) {
-                NotificationEvent::dispatch($user->id, 'Chat | Owner: '.$data->chat->owner->name, $data->message);
-            }
-        }
+        $this->notificationService->storeChatNotify($data->chat_id, $data->message);
 
         return response()->json($data);
     }
