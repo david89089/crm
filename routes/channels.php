@@ -22,6 +22,13 @@ Broadcast::channel('logs', function ($user) {
     return false;
 });
 
+Broadcast::channel('new-user', function ($user) {
+    if ($user->role('manager')){
+        return true;
+    }
+    return false;
+});
+
 Broadcast::channel('notifications.{user_id}', function ($user, $user_id) {
     if ($user->id == $user_id){
         return true;

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use anlutro\cURL\cURL;
+use App\Events\NewUserEvent;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -46,8 +47,6 @@ class NewUser extends Command
         $response = $curl->get('https://api.randomuser.me/');
         $user = json_decode($response, true);
 
-        $roleUser = Role::where('name', '=', 'user')->first();
-
         $userInfo = [
             'name' => $user['results'][0]['name']['first'],
             'password' => Hash::make($user['results'][0]['login']['password']),
@@ -59,7 +58,10 @@ class NewUser extends Command
             'photo' => $user['results'][0]['picture']['large']
         ];
 
+        $roleUser = Role::where('name', '=', 'user')->first();
         $user = User::create($userInfo);
         $user->assignRole($roleUser);
+
+        NewUserEvent::dispatch($user);
     }
 }

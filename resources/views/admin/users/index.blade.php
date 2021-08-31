@@ -30,35 +30,7 @@
                         @endif
                     </div>
 
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Имя</th>
-                                <th scope="col">Действия</th>
-                                <th scope="col">Статус</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $user)
-                                <tr>
-                                    <th scope="row">{{$user->id}}</th>
-                                    <td>{{$user->name}}</td>
-                                    <td>
-                                        <form action="{{route('admin.users.show', $user->id)}}" method="GET">
-                                            @csrf
-                                            <input type="hidden" name="id" value="{{ $user->id }}">
-                                            <button type="submit" class="btn btn-primary">Посмотреть анкету</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        {{\App\Enums\UsersEnum::getNameByStatus($user->status ?? 0)}}
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <users v-bind:list_statuses="{{json_encode($listStatuses)}}" v-bind:users="{{json_encode($users)}}"></users>
                     {{$users->links("pagination::bootstrap-4")}}
                 </div>
             </div>
