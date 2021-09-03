@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use anlutro\cURL\cURL;
 use App\Events\NewUserEvent;
+use App\Events\NotificationEvent;
 use App\Models\User;
+use App\Service\NotificationService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -26,13 +28,16 @@ class NewUser extends Command
      */
     protected $description = 'Command description';
 
+    public NotificationService $notificationService;
+
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(NotificationService $notificationService)
     {
+        $this->notificationService = $notificationService;
         parent::__construct();
     }
 
@@ -63,5 +68,7 @@ class NewUser extends Command
         $user->assignRole($roleUser);
 
         NewUserEvent::dispatch($user);
+
+        $this->notificationService->storeUserNotify($user);
     }
 }

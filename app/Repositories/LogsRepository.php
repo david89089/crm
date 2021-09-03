@@ -8,7 +8,7 @@ use App\Models\User;
 
 /**
  * Class LogsRepository
- * @package App\Repository
+ * @package App\Repositories
  */
 class LogsRepository
 {
