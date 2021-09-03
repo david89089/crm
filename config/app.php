@@ -137,7 +137,7 @@ return [
     'providers' => [
 
         /*
-         * Laravel Framework Repository Providers...
+         * Laravel Framework Repositories Providers...
          */
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
@@ -163,11 +163,11 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 
         /*
-         * Package Repository Providers...
+         * Package Repositories Providers...
          */
 
         /*
-         * Application Repository Providers...
+         * Application Repositories Providers...
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
