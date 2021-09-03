@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Repository;
-use App\Events\PrivateChatEvent;
+namespace App\Repositories;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\User;
 use Illuminate\Support\Facades\Session;
 
 /**
- * Class ChatRepository
+ * Class ChatRepositories
+ * @package App\Repositories
  */
-class ChatRepository
+class ChatRepositories
 {
     /**
      * @param int $user_id

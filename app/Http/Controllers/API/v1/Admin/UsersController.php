@@ -6,7 +6,7 @@ use App\Enums\UsersEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateStatus;
 use App\Models\User;
-use App\Repository\LogsRepository;
+use App\Repositories\LogsRepositories;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Session;
  */
 class UsersController extends Controller
 {
-    public LogsRepository $logsRepository;
+    public LogsRepositories $logsRepositories;
 
-    public function __construct(LogsRepository $logsRepository)
+    public function __construct(LogsRepositories $logsRepositories)
     {
-        $this->logsRepository = $logsRepository;
+        $this->logsRepositories = $logsRepositories;
     }
 
     public function updateStatus(UpdateStatus $request, int $status)
@@ -28,7 +28,7 @@ class UsersController extends Controller
         $user->status = $status;
         $user->save();
 
-        $this->logsRepository->createLogStatus($user, $status);
+        $this->logsRepositories->createLogStatus($user, $status);
 
         Session::flash('status', __("Status updated ".UsersEnum::getNameByStatus($status)));
         return back();

@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Chat;
-use App\Repository\ChatRepository;
+use App\Repositories\ChatRepositories;
 use Illuminate\Support\Facades\Broadcast;
 
 /*

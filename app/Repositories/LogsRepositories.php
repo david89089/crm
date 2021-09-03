@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repositories;
 use App\Enums\UsersEnum;
 use App\Events\LogsEvent;
 use App\Models\User;
 
 
 /**
- * Class LogsRepository
+ * Class LogsRepositories
  * @package App\Repositories
  */
-class LogsRepository
+class LogsRepositories
 {
     public function createLogStatus(User $user, int $status)
     {

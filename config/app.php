@@ -125,7 +125,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Autoloaded Repository Providers
+    | Autoloaded Repositories Providers
     |--------------------------------------------------------------------------
     |
     | The service providers listed here will be automatically loaded on the

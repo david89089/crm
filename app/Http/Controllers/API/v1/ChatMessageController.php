@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\v1;
 use App\Events\PrivateChatEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChatMessageRequest;
-use App\Repository\ChatRepository;
+use App\Repositories\ChatRepositories;
 use App\Service\NotificationService;
 
 /**
@@ -14,19 +14,19 @@ use App\Service\NotificationService;
  */
 class ChatMessageController extends Controller
 {
-    public ChatRepository $chatRepository;
+    public ChatRepositories $ChatRepositories;
     public NotificationService $notificationService;
 
-    public function __construct(ChatRepository $chatRepository,
+    public function __construct(ChatRepositories $ChatRepositories,
                                 NotificationService $notificationService)
     {
-        $this->chatRepository = $chatRepository;
+        $this->ChatRepositories = $ChatRepositories;
         $this->notificationService = $notificationService;
     }
 
     public function store(ChatMessageRequest $request)
     {
-        $data = $this->chatRepository->storeMessage($request->input('chat_id'), $request->input('message'));
+        $data = $this->ChatRepositories->storeMessage($request->input('chat_id'), $request->input('message'));
 
         PrivateChatEvent::dispatch($data);
 

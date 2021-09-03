@@ -42,7 +42,7 @@
                                     <td>{{$user->name}}</td>
                                     @if(Auth::user()->chat)
                                         @if($user->id != auth()->id())
-                                            @if(\App\Repository\ChatRepository::isChatUser(Auth::user()->chat, $user->id))
+                                            @if(\App\Repositories\ChatRepositories::isChatUser(Auth::user()->chat, $user->id))
                                                 <td>
                                                     <form method="POST" action="{{route('chat.delete.user', ['chat' => Auth::user()->chat->id])}}">
                                                         @csrf
@@ -65,7 +65,7 @@
                                         @endif
                                     @endif
                                     @if($user->chat)
-                                        @if(\App\Repository\ChatRepository::isChatUser($user->chat, auth()->id()))
+                                        @if(\App\Repositories\ChatRepositories::isChatUser($user->chat, auth()->id()))
                                             <td>
                                                 <form method="GET" action="{{route('chat.index', ['chat' => $user->chat->id])}}">
                                                     @csrf

@@ -6,7 +6,7 @@ use App\Enums\UsersEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\User;
-use App\Repository\ChatRepository;
+use App\Repositories\ChatRepositories;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -17,22 +17,22 @@ use Illuminate\Support\Facades\Session;
  */
 class ChatController extends Controller
 {
-    public ChatRepository $chatRepository;
-    public function __construct(ChatRepository $chatRepository)
+    public ChatRepositories $ChatRepositories;
+    public function __construct(ChatRepositories $ChatRepositories)
     {
-        $this->chatRepository = $chatRepository;
+        $this->ChatRepositories = $ChatRepositories;
     }
 
     public function store(Request $request)
     {
-        $chat = $this->chatRepository->store($request->get('id'));
+        $chat = $this->ChatRepositories->store($request->get('id'));
 
         return redirect()->route('chat.index', ['chat' => $chat->id]);
     }
 
     public function destroy(Request $request)
     {
-        $this->chatRepository->destroy($request->get('id'));
+        $this->ChatRepositories->destroy($request->get('id'));
 
         return back();
     }
@@ -41,13 +41,13 @@ class ChatController extends Controller
     {
         $user = User::find($request->input('user_id'));
 
-        $isChatUser = $this->chatRepository->isChatUser($chat, $user->id);
+        $isChatUser = $this->ChatRepositories->isChatUser($chat, $user->id);
 
         if($isChatUser) {
             return back()->withErrors('Error add user');
         }
 
-        $this->chatRepository->addUser($chat, $user);
+        $this->ChatRepositories->addUser($chat, $user);
 
         return back();
     }
@@ -56,10 +56,10 @@ class ChatController extends Controller
     {
         $user = User::find($request->input('user_id'));
 
-        $isChatUser = $this->chatRepository->isChatUser($chat, $user->id);
+        $isChatUser = $this->ChatRepositories->isChatUser($chat, $user->id);
 
         if($isChatUser) {
-            $this->chatRepository->deleteUser($chat, $user);
+            $this->ChatRepositories->deleteUser($chat, $user);
             return back();
         }
 
